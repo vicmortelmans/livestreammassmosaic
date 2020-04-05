@@ -9,4 +9,4 @@ git pull
 git commit -am "update of livemass pages"
 git push origin master
 gsutil -m rsync -e -x '\.git.*' -R . gs://mosaic.gelovenleren.net
-echo "livestreammassmosaic updated @ `date`" >> /home/vicmortelmans/livestreammassmosaic.log
+echo "livestreammassmosaic updated @ `date`" >> ~/livestreammassmosaic.log
