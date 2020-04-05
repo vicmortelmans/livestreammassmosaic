@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Livestream Mass Mosaic</title>
+    <style>
+      iframe {border: 0; width: 320px; height: 180px; overflow: hidden; float: left;}
+      body {max-width: 1280px; margin: 0 auto;}
+    </style>
+  </head>
+  <body>
+    <script>
+      function add_randomly(iframe) {
+        var body = document.body;
+        var count = body.children.length;
+        var random = Math.floor( Math.random() * count );
+        body.children[random].insertAdjacentElement("afterEnd", iframe);
+        iframe.addEventListener('load',function(){
+          var iframebody = iframe.contentWindow.document.getElementsByTagName('body')[0];
+          iframebody.style.overflow = "hidden";
+        }, false);
+      }
+      function livemass(name) {
+        var iframe = document.createElement('iframe');
+        iframe.addEventListener('load', function() {
+          var video = iframe.contentWindow.document.getElementsByTagName('video')[0];
+          video.style.position = "fixed";
+          iframe.contentWindow.jwplayer().play();
+          //iframe.contentWindow.jwplayer().setFullscreen(true);
+          iframe.contentWindow.jwplayer().once('play',function(){
+            iframe.contentWindow.jwplayer().pause();
+          });
+        }, false);
+        iframe.src = name + ".html";
+        add_randomly(iframe);
+      }
+      function youtube_channel(channel_id, keyword) {
+        var callback = channel_id.replace(/[^a-z]/gi,'');
+        var url = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.youtube.com%2Ffeeds%2Fvideos.xml%3Fchannel_id%3D" + channel_id + "&callback=" + callback; // using channel id as callback function name
+        var script = document.createElement('script');
+        script.type = "text/javascript";
+        script.src = url;
+        window[callback] = function(data){  // https://gist.github.com/gf3/132080/da50b34e982bcecf7c1376b1eeed35e9f2aacb19
+          for (let i=0; i<data['items'].length; i++) {
+            if (data['items'][i]['title'].toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
+              var iframe = document.createElement('iframe');
+              iframe.src = data['items'][i]['link'].replace('/watch?v=','/embed/');
+              add_randomly(iframe);
+              break;
+            }
+          }
+        }
+        document.getElementsByTagName('head')[0].appendChild(script);
+      }
+      function facebook(video_url,no_location_update) {
+        var iframe = document.createElement('iframe');
+        iframe.src = "https://www.facebook.com/plugins/video.php?href=" + encodeURIComponent(video_url);
+        add_randomly(iframe);
+        if (!no_location_update) {
+          const params = new URLSearchParams(location.search);
+          params.append('facebook',video_url);
+          window.history.replaceState({}, '', `${location.pathname}?${params}`);
+        }
+      }
+      function youtube(video_url,no_location_update) {
+        var iframe = document.createElement('iframe');
+        iframe.src = video_url.replace('/watch?v=','/embed/');
+        add_randomly(iframe);
+        if (!no_location_update) {
+          const params = new URLSearchParams(location.search);
+          params.append('youtube',video_url);
+          window.history.replaceState({}, '', `${location.pathname}?${params}`);
+        }
+      }
+      function url(url,no_location_update) {
+        var iframe = document.createElement('iframe');
+        iframe.src = url;
+        add_randomly(iframe);
+        if (!no_location_update) {
+          const params = new URLSearchParams(location.search);
+          params.append('url',url);
+          window.history.replaceState({}, '', `${location.pathname}?${params}`);
+        }
+      }
+      function twitch(name) {
+        var iframe = document.createElement('iframe');
+        iframe.src = "https://player.twitch.tv/?channel=" + name;
+        add_randomly(iframe);
+      }
+      function audio(url,title,no_location_update) {
+        var iframe = document.createElement('iframe');
+        iframe.addEventListener('load', function() {
+          iframe.contentWindow.document.getElementsByTagName("audio")[0].src = url;
+          iframe.contentWindow.document.getElementsByTagName("h1")[0].innerHTML = title;
+        }, false);
+        iframe.src = "audio.html";
+        add_randomly(iframe);
+        if (!no_location_update) {
+          const params = new URLSearchParams(location.search);
+          params.append('audio',url);
+          window.history.replaceState({}, '', `${location.pathname}?${params}`);
+        }
+      }
+      livemass("Sarasota");
+      livemass("Fribourg");
+      livemass("LA");
+      livemass("Guadalajara");
+      livemass("Warrington");
+      youtube_channel("UC7E-LYc1wivk33iyt5bR5zQ","mass"); // vatican
+      youtube_channel("UCOSyx9ZAMY0c3mE4aGDPA-Q","h. mis"); // hemelstraat
+      youtube_channel("UCoBsBL5PSYnOKZVwu2r0Drg","vier"); // kathedraal
+      youtube_channel("UCtlgsab0wOd5Ww7rMrCbUDA","vier"); // de goede herder gent west
+      youtube_channel("UC7lUxNFc6p777LTjiz6MMTA","mis"); // sjm
+      youtube_channel("UCB5NdyDLarsCua1TuAquyAg","mis"); // kathedraal sint-bavo 
+      youtube_channel("UCJ-IfSvgtJ8rg6oSPvfcrNA",""); // kerk in mechelen
+      youtube_channel("UCf0kwiiUpoaD5_4kIIwhNfA",""); // livestream van kerknet
+      youtube("https://www.youtube.com/watch?v=gvPrYMczF3k",true);  // star trek
+      youtube("https://www.youtube.com/watch?v=ojGaZWm93WU",true);  // vatican media live
+      youtube("https://www.youtube.com/watch?v=YYE85ijibbs",true);  // livestreammasssoundscape
+      url("add-youtube.html",true);
+      url("add-facebook.html",true);
+      url("add-website.html",true);
+      url("add-audio.html",true);
+      //url("https://organroxx.com/en_US/page/player");
+      audio("http://87.233.180.73:8000/;","Radio Maria Nederland",true);
+      audio("http://stream.radiomaria.be:8000/RadioMaria-32","Radio Maria Vlaanderen",true);
+      audio("https://radio.organroxx.com/freestream.mp3","Organroxx",true);
+      audio("http://source.audio.true.nl:8000/abdijkoningsoord","Abdij Koningsoord",true);
+      audio("https://barroux.ice.infomaniak.ch/chant.mp3","Abbaye de Barroux",true);
+      twitch("mar_magdalena_chapel");
+      const params = new URLSearchParams(location.search)
+      for (let p of params) {
+        if (p[0] == 'facebook') facebook(p[1],true)
+        else if (p[0] == 'audio') audio(p[1],true)
+        else if (p[0] == 'url') url(p[1],true)
+        else if (p[0] == 'youtube') youtube(p[1],true);
+      }
+    </script>
+  </body>
+</html>
