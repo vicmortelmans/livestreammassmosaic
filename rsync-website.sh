@@ -1,4 +1,5 @@
 #!/bin/sh
+cd `dirname "$0"`
 curl -o Sarasota.html http://livemass.s3.amazonaws.com/sarasota/sarasota-mass-of-the-day.html
 curl -o Warrington.html http://livemass.s3.amazonaws.com/warrington/warrington-mass-of-the-day.html
 curl -o LA.html http://livemass.s3.amazonaws.com/la/la-mass-of-the-day.html
