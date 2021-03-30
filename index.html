@@ -33,6 +33,19 @@
         iframe.src = name + ".html";
         add_randomly(iframe);
       }
+      function youtube_playlist(playlist_id) {
+        var callback = playlist_id.replace(/[^a-z]/gi,'');
+        var url = "https://catecheserooster.appspot.com/playlist-latest?" + playlist_id + "&callback=" + callback; // using playlist id as callback function name
+        var script = document.createElement('script');
+        script.type = "text/javascript";
+        script.src = url;
+        window[callback] = function(data){  // https://gist.github.com/gf3/132080/da50b34e982bcecf7c1376b1eeed35e9f2aacb19
+          var iframe = document.createElement('iframe');
+          iframe.src = data['video'];
+          add_randomly(iframe);
+        }
+        document.getElementsByTagName('head')[0].appendChild(script);
+      }
       function youtube_channel(channel_id, keyword) {
         var callback = channel_id.replace(/[^a-z]/gi,'');
         var url = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.youtube.com%2Ffeeds%2Fvideos.xml%3Fchannel_id%3D" + channel_id + "&callback=" + callback; // using channel id as callback function name
@@ -100,36 +113,30 @@
           window.history.replaceState({}, '', `${location.pathname}?${params}`);
         }
       }
-      livemass("Sarasota");
-      livemass("Fribourg");
-      livemass("LA");
-      livemass("Guadalajara");
-      livemass("Warrington");
-      youtube_channel("UC7E-LYc1wivk33iyt5bR5zQ","mass"); // vatican
-      youtube_channel("UCOSyx9ZAMY0c3mE4aGDPA-Q","h. mis"); // hemelstraat
-      youtube_channel("UCoBsBL5PSYnOKZVwu2r0Drg","vier"); // kathedraal
+      livemass("sarasota-d");
+      livemass("fribourg-d");
+      livemass("la-d");
+      livemass("guadalajara-d");
+      livemass("warrington-d");
+      youtube_playlist("PLsTqv8iy6f_1rroXuyRClpLWmoAX7syT7"); // kathedraal
       youtube_channel("UCtlgsab0wOd5Ww7rMrCbUDA","vier"); // de goede herder gent west
-      youtube_channel("UC7lUxNFc6p777LTjiz6MMTA","mis"); // sjm
-      youtube_channel("UCB5NdyDLarsCua1TuAquyAg","mis"); // kathedraal sint-bavo 
-      youtube_channel("UCJ-IfSvgtJ8rg6oSPvfcrNA",""); // kerk in mechelen
-      youtube_channel("UCf0kwiiUpoaD5_4kIIwhNfA",""); // livestream van kerknet
-      youtube_channel("UCFTsQxUb_FY5Toyo5Ew4qzA","viering"); // krijtberg
+      youtube_playlist("PLMnBynuB0ig0UjIRF5FkMLD63q5nalVKG"); // kathedraal sint-bavo 
+      youtube_playlist("PLwEFLjpOpx44J6hesIRk7xPqm4TPRHYmI"); // kerk in mechelen
       youtube_channel("UCoc4Nu1vvJTXq3r5l7i_uKw","stream"); // de nieuwe augustinus
       youtube_channel("UCCmbPcc_OJ0fWRr7Y-oNvYA","mis"); // olv ter nood heiloo
       youtube_channel("UCKouktARzJObJ2ofeb80gqA",""); // agneskerk
       youtube_channel("UCqv4-vNZOZWNejrQ3N6qAzA","viering"); // st vituskerk hilversum
-      youtube_channel("UCx7I1Vq6-B7lc_-5lL3avKw",""); // johannes de doper parochie hoofddorp
-      youtube_channel("UC7zlbnNCnuAPiC3goKcFgUg",""); // lourdes
-      youtube_channel("UCR_mu9zinnTCkIH1e6SfTcg",""); // enfant jesus de prague
+      youtube_playlist("PL4DLLW8HP6UX7m2yxbdhB8Q9WF8UfeDAK"); // johannes de doper parochie hoofddorp
+      youtube_playlist("PL2fBaIU3WZ22rbx_XEp4De0hCc6P3u80q"); // lourdes
       youtube_channel("UCh8usyst6eE2fF6HApeQY3A",""); // oropo
       youtube_channel("UCoXMkIYNxNpXx2O-aVl_ToA",""); // einsiedeln
-      youtube_channel("UC0XqKDawKFLiY1vvfXnriGA",""); // niepokalanow
-      youtube_channel("UCb-R-Q9gHsx2NGHAuGmViGA",""); // kykkos
+      youtube_playlist("PLWyLlse5gKVsLuWqFIgcYZstFFP5nPT1k"); // niepokalanow
+      youtube_playlist("PL_ZOUnOGKwtW3McKx1Wvvp7llql3SQpB3"); // kykkos
       youtube_channel("UCUcUuk4B90xpgKj4Un7vNRg",""); // knock
       youtube_channel("UC8ruKlnR-riJorule-3tuhg",""); // welsingham
       youtube_channel("UCOAjX8pc2fY1S5AqsXvZywg",""); // fatima
       youtube("https://www.youtube.com/watch?v=gvPrYMczF3k",true);  // star trek
-      youtube("https://www.youtube.com/watch?v=ojGaZWm93WU",true);  // vatican media live
+      youtube("https://www.youtube.com/watch?v=4Rb7_WdNlZY",true);  // vatican media live
       youtube("https://www.youtube.com/watch?v=YYE85ijibbs",true);  // livestreammasssoundscape
       url("add-youtube.html",true);
       url("add-facebook.html",true);
